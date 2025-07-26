@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Runs Qwen3 14B with MoE upcycling
+# Runs Qwen3 1.6B with MoE upcycling
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 
@@ -29,10 +29,10 @@ MODEL_ARGS=(
     --disable-bias-linear
     --seq-length 4096
     --max-position-embeddings 32768
-    --num-layers 40
-    --hidden-size 5120
-    --ffn-hidden-size 13696
-    --num-attention-heads 40
+    --num-layers 24
+    --hidden-size 2048
+    --ffn-hidden-size 5504
+    --num-attention-heads 16
     --init-method-std 0.01
     --attention-dropout 0.0
     --hidden-dropout 0.0
@@ -41,16 +41,16 @@ MODEL_ARGS=(
     --swiglu
     --untie-embeddings-and-output-weights
     --group-query-attention
-    --num-query-groups 8
+    --num-query-groups 4
     --no-masked-softmax-fusion
     --no-position-embedding
     --rotary-base 1000000
 )
 
 MOE_ARGS=(
-    --num-experts 64
-    --moe-ffn-hidden-size 1712
-    --moe-router-topk 8
+    --num-experts 32
+    --moe-ffn-hidden-size 768
+    --moe-router-topk 4
     --moe-router-dtype fp32
     --moe-aux-loss-coeff 1e-3
     --moe-token-dispatcher-type alltoall
@@ -87,8 +87,8 @@ TRAINING_ARGS=(
 
 MODEL_PARALLEL_ARGS=(
     --tensor-model-parallel-size 1
-    --pipeline-model-parallel-size 4
-    --expert-model-parallel-size 8
+    --pipeline-model-parallel-size 1
+    --expert-model-parallel-size 4
     --sequence-parallel
     --use-distributed-optimizer
 )
